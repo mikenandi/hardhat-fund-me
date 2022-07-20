@@ -24,10 +24,9 @@ contract FundMe {
         priceFeed = AggregatorV3Interface(priceFeedAddress);
     }
 
-    // fund me function.
     function fund() public payable {
         require(
-            msg.value.getConversionRate() >= minimumUsd,
+            msg.value.getConversionRate(priceFeed) >= minimumUsd,
             "Didn't send enough money here!"
         );
         funders.push(msg.sender);
@@ -35,7 +34,6 @@ contract FundMe {
         addressToAmountFunded[msg.sender] = msg.value;
     }
 
-    // withdraw function.
     function withdraw() public onlyOwner {
         for (
             uint256 funderIndex = 0;
